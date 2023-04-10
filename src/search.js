@@ -4,6 +4,7 @@ let ingreds = [];
 const ingredList = document.querySelector(".ingreds");
 const searchBar = document.querySelector("input");
 const searchButton = document.querySelector("#search");
+const results = document.querySelector(".display");
 
 searchBar.addEventListener("keydown", (event)=>{
     if(event.key === "Enter" ){
@@ -41,14 +42,35 @@ function removeIngred(element) {
     let name = element.firstChild.textContent;
     let index = ingreds.indexOf(name);
     ingreds.splice(index,1);
-    console.log(ingreds);
     element.remove();
 }
 searchButton.addEventListener("click", async ()=>{
     let recipe = await search(ingreds);
     console.log("output: " + recipe)
+    appendResults(recipe);
 });
 
+function appendResults(recipes) {
+    //console.log(inside);
+    for(let i = 0; i < recipes.length; i++){
+        const name = document.createElement("div");
+        name.classList.add("info")
+        name.textContent = recipes[i].name;
+
+        const ingred = document.createElement("div");
+        ingred.classList.add("info")
+        ingred.textContent = recipes[i].ingredients;
+
+        const next = document.createElement("div");
+        next.classList.add("info")
+        next.classList.add("link")
+        next.textContent = "Click Here";
+
+        results.appendChild(name);
+        results.appendChild(ingred);
+        results.appendChild(next);
+    }
+}
 
 
 

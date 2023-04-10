@@ -32,8 +32,8 @@ async function search(ingreds){
     const db = getDatabase(app);
     const recipesRef = ref(db, 'recipes');
     const snapshot = await get(recipesRef);
-    console.log(snapshot.val());
     let recipes = snapshot.val();
+    let filteredReps = [];
     for(let i = 0; i < recipes.length; i++){
         // split ingredients
         let recipeIngreds = recipes[i].ingredients.split(',');
@@ -48,11 +48,12 @@ async function search(ingreds){
             }
         }
         if(works){
-            console.log(recipes[i]);
+            filteredReps.push(recipes[i]);
         }
     }
-    return snapshot.val();
+    return filteredReps;
 }
 
+// addRecipe(1,"Bacon Cheese Baked Potato","cheese,bacon,potatoes","no steps yet lmao","nope.com");
 
 export {search};
