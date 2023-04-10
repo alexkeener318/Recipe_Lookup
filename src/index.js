@@ -1,4 +1,6 @@
 import {initializeApp} from 'firebase/app'
+import { getDatabase,ref, set, get } from "firebase/database";
+import addIngred from './search';
 
 const firebaseConfig = {
     apiKey: "AIzaSyAhuoE6YMI6jU3w0fehj8iSh6fvzTFFcN0",
@@ -7,46 +9,48 @@ const firebaseConfig = {
     storageBucket: "recipe-lookup-bee2b.appspot.com",
     messagingSenderId: "98458353965",
     appId: "1:98458353965:web:b2cf354725430fec5b93a4",
-    measurementId: "G-XCTF7BM71K"
+    measurementId: "G-XCTF7BM71K",
+    databaseURL: "https://recipe-lookup-bee2b-default-rtdb.firebaseio.com/",
   };
 
 const app = initializeApp(firebaseConfig);
 
-let ingreds = [];
-const ingredList = document.querySelector(".ingreds");
-const search = document.querySelector("input")
 
-search.addEventListener("keydown", (event)=>{
-    if(event.key === "Enter" ){
-        addIngred(search.value);
-        search.value = "";
-    }
-});
+function addRecipe(recipeID, rName, ingreds, rSteps, image){
+    const db = getDatabase(app);
+    const reference = ref(db, 'recipes/' + recipeID);
 
-
-function addIngred(ingred) {
-    const newIngred = document.createElement("div");
-    newIngred.classList.add("ingred")
-    
-    //make text and remove button
-    const text = document.createElement("div");
-    text.classList.add("ingred-text")
-    text.textContent = ingred;
-
-    const remove = document.createElement("div");
-    remove.classList.add("remove-ingred")
-    remove.textContent = "X";
-    remove.addEventListener("click", ()=>{
-        removeIngred(newIngred)
+    set(reference, {
+        name: rName,
+        ingredients: ingreds,
+        steps: rSteps,
+        url: image
     });
-
-    // Add to parent ingredient div
-    newIngred.appendChild(text);
-    newIngred.appendChild(remove);
-
-    ingredList.appendChild(newIngred);
 }
 
-function removeIngred(element) {
-    element.remove();
+async function search(ingreds){
+    const db = getDatabase(app);
+    const recipesRef = ref(db, 'recipes');
+    const snapshot = await get(recipesRef);
+    console.log(snapshot.val());
+    let recipes = snapshot.val();
+    for(let i = 0; i < recipes.length; i++){
+        // split ingredients
+        let recipeIngreds = recipes[i].ingredients.split(',');
+        console.log(recipeIngreds);
+        let works = true;
+        for(let j = 0; j < ingreds.length; j++){
+            if(!recipeIngreds.includes(ingreds[j])){
+                works = false;
+                break;
+            }
+        }
+        if(works){
+            console.log(recipes[i]);
+        }
+    }
+    return snapshot.val();
 }
+
+
+export {search};
