@@ -45,13 +45,32 @@ function removeIngred(element) {
     element.remove();
 }
 searchButton.addEventListener("click", async ()=>{
+    results.innerHTML = "";
+    readdHeader();
     let recipe = await search(ingreds);
     console.log("output: " + recipe)
     appendResults(recipe);
 });
 
+function readdHeader(){
+    const name = document.createElement("div");
+    name.classList.add("header")
+    name.textContent = "Name";
+
+    const ingred = document.createElement("div");
+    ingred.classList.add("header")
+    ingred.textContent = "Ingredients";
+
+    const next = document.createElement("div");
+    next.classList.add("header")
+    next.textContent = "View Entire Recipe";
+
+    results.appendChild(name);
+    results.appendChild(ingred);
+    results.appendChild(next);
+}
+
 function appendResults(recipes) {
-    //console.log(inside);
     for(let i = 0; i < recipes.length; i++){
         const name = document.createElement("div");
         name.classList.add("info")
