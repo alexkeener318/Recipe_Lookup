@@ -14,6 +14,7 @@ searchBar.addEventListener("keydown", (event)=>{
 
 
 function addIngred(ingred) {
+    ingreds.push(ingred);
     const newIngred = document.createElement("div");
     newIngred.classList.add("ingred")
     
@@ -37,11 +38,15 @@ function addIngred(ingred) {
 }
 
 function removeIngred(element) {
+    let name = element.firstChild.textContent;
+    let index = ingreds.indexOf(name);
+    ingreds.splice(index,1);
+    console.log(ingreds);
     element.remove();
 }
 searchButton.addEventListener("click", async ()=>{
-    let recipe = await search(ingredList);
-    console.log(recipe)
+    let recipe = await search(ingreds);
+    console.log("output: " + recipe)
 });
 
 

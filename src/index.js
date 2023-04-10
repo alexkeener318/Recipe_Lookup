@@ -39,7 +39,9 @@ async function search(ingreds){
         let recipeIngreds = recipes[i].ingredients.split(',');
         console.log(recipeIngreds);
         let works = true;
+        console.log(ingreds.length);
         for(let j = 0; j < ingreds.length; j++){
+            console.log("seeing if " + recipeIngreds + " contains " + ingreds[j]);
             if(!recipeIngreds.includes(ingreds[j])){
                 works = false;
                 break;
